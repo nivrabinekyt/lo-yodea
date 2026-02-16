@@ -2,7 +2,11 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Transaction, AIInsight } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// פונקציה לקבלת ה-AI בבטחה
+const getAIClient = () => {
+  const apiKey = (typeof process !== 'undefined' && process.env?.API_KEY) || "";
+  return new GoogleGenAI({ apiKey });
+};
 
 export const getFinancialInsights = async (transactions: Transaction[]): Promise<AIInsight> => {
   if (transactions.length === 0) {
@@ -11,6 +15,8 @@ export const getFinancialInsights = async (transactions: Transaction[]): Promise
       tip: "מעקב אחר הקפה היומי הוא מקום מצוין להתחיל בו."
     };
   }
+
+  const ai = getAIClient();
 
   const prompt = `Analyze the following transaction history. Provide a concise, encouraging summary of spending habits and one specific, actionable tip for saving money.
   IMPORTANT: Both the summary and the tip MUST be written in Hebrew.
@@ -47,7 +53,7 @@ export const getFinancialInsights = async (transactions: Transaction[]): Promise
   } catch (error) {
     console.error("Gemini Error:", error);
     return {
-      summary: "לא ניתן לייצר תובנות כרגע.",
+      summary: "לא ניתן לייצר תובנות כרגע (בדקו אם הוגדר API KEY בנטליפיי).",
       tip: "המשיכו לעקוב אחר ההוצאות שלכם כדי להישאר בשליטה."
     };
   }
