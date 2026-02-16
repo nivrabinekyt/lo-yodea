@@ -1,0 +1,12 @@
+
+[build]
+  # התיקייה שנטליפיי תגיש לאינטרנט אחרי הבנייה
+  publish = "dist"
+  # פקודת הבנייה שתהפוך TypeScript ל-JS
+  command = "npm run build"
+
+[[redirects]]
+  # הגדרה שמאפשרת לאפליקציית Single Page לעבוד נכון עם רענוני דף
+  from = "/*"
+  to = "/index.html"
+  status = 200
